@@ -1,18 +1,18 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="10/22/2021 10:27:00 AM"
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="X893"
   DTS:CreatorName="X893\mitek"
-  DTS:DTSID="{BCAB22C0-3031-4F11-9E85-B329DB0FA4A5}"
+  DTS:DTSID="{41444CCE-50D2-47F9-B2EF-C440337DE70D}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="15.0.2000.170"
   DTS:LocaleID="1049"
-  DTS:ObjectName="Package"
+  DTS:ObjectName="Task1"
   DTS:PackageType="5"
-  DTS:VersionBuild="12"
-  DTS:VersionGUID="{446B64A1-36A6-452D-B91E-8B36FB8433A4}">
+  DTS:VersionBuild="14"
+  DTS:VersionGUID="{B2B2C198-76F0-4228-9D02-6A12E403FA8A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -547,15 +547,40 @@
           SQLTask:SqlStatementSource="USE [AdventureWorks2017]&#xA;&#xA;IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[vTest]') AND type in (N'V'))&#xA;BEGIN&#xA;&#x9;DECLARE @sql VARCHAR(max)&#xA;&#x9;SET @sql = '&#xA;&#x9;CREATE VIEW [dbo].[vTest]&#xA;&#x9;AS&#xA;&#x9;&#x9;SELECT&#x9;SOH.SalesOrderID, SOH.OrderDate,&#xA;&#x9;&#x9;&#x9;&#x9;P.Name AS ProductName, P.ProductNumber,&#xA;&#x9;&#x9;&#x9;&#x9;PC.Name AS ProductCategory,&#xA;&#x9;&#x9;&#x9;&#x9;SOD.OrderQty, SOD.UnitPrice, SOD.LineTotal AS Total,&#xA;&#x9;&#x9;&#x9;&#x9;T.Name AS TerritoryName&#xA;&#x9;&#x9;FROM&#x9;Sales.SalesOrderHeader AS SOH&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Sales.SalesOrderDetail AS SOD ON SOH.SalesOrderID = SOD.SalesOrderID&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Production.Product AS P ON SOD.ProductID = P.ProductID&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Sales.Customer AS C ON SOH.CustomerID = C.CustomerID&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Sales.SalesTerritory AS T ON C.TerritoryID = T.TerritoryID&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Production.ProductSubcategory AS PSC ON P.ProductSubcategoryID = PSC.ProductSubcategoryID&#xA;&#x9;&#x9;&#x9;&#x9;INNER JOIN Production.ProductCategory AS PC ON PSC.ProductCategoryID = PC.ProductCategoryID&#xA;&#x9;'&#xA;&#x9;EXECUTE( @sql )&#xA;END&#xA;&#xA;IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TestData]') AND type in (N'U'))&#xA;BEGIN&#xA;&#x9;CREATE TABLE [dbo].[TestData](&#xA;&#x9;&#x9;[SalesOrderID] int NOT NULL,&#xA;&#x9;&#x9;[OrderDate] datetime NOT NULL,&#xA;&#x9;&#x9;[ProductName] nvarchar(50) NOT NULL,&#xA;&#x9;&#x9;[ProductNumber] nvarchar(25) NOT NULL,&#xA;&#x9;&#x9;[ProductCategory] nvarchar(50) NOT NULL,&#xA;&#x9;&#x9;[OrderQty] smallint NOT NULL,&#xA;&#x9;&#x9;[UnitPrice] money NOT NULL,&#xA;&#x9;&#x9;[Total] numeric(38, 6) NOT NULL,&#xA;&#x9;&#x9;[TerritoryName] nvarchar(50) NOT NULL&#xA;&#x9;) ON [PRIMARY]&#xA;END&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Trancate Destination Table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Trancate Destination Table"
+      DTS:DTSID="{E9E8ED72-7985-45C1-8377-D748AA2972CE}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Trancate Destination Table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2019; © 2019 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{99104F33-814B-41EE-AFF7-71D2F498D12D}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE dbo.[TestData]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
-      DTS:DTSID="{EA6190E9-C6C9-4823-B57A-A5C2096A42C2}"
+      DTS:DTSID="{2E27E085-4BA7-42B2-ACD9-2A6546CD1C5E}"
       DTS:From="Package\Create Destination Table"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
+      DTS:To="Package\Trancate Destination Table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{2BBC0C96-96CC-4336-B05A-F70A38B367BF}"
+      DTS:From="Package\Trancate Destination Table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
       DTS:To="Package\Copy data" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
@@ -569,41 +594,55 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="129,42"
           Id="Package\Copy data"
-          TopLeft="79.5,177.5" />
+          TopLeft="117.5,205.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Create Destination Table"
           TopLeft="76.5,46.5" />
+        <NodeLayout
+          Size="224,42"
+          Id="Package\Trancate Destination Table"
+          TopLeft="72,124" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="177,88.5">
+          TopLeft="180.5,88.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-20,89"
+              EndConnector="0,35.5"
               Start="0,0"
-              End="-20,81.5">
+              End="0,28">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,40.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,40.5"
-                    Point2="0,44.5"
-                    Point3="-4,44.5" />
+                    End="0,28" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="183,166">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.5"
+              Start="0,0"
+              End="0,32">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
                   <mssgle:LineSegment
-                    End="-16,44.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-16,44.5"
-                    Point2="-20,44.5"
-                    Point3="-20,48.5" />
-                  <mssgle:LineSegment
-                    End="-20,81.5" />
+                    End="0,32" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
